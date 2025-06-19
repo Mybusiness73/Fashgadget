@@ -1,93 +1,448 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FashGadget</title>
+  <meta charset="UTF-8">
+  <title>FashGadget Store</title>
   <link rel="stylesheet" href="style.css">
+  <script src="products.js" defer></script>
+  <script src="cart.js" defer></script>
 </head>
 <body>
+
   <header>
-    <h1>Welcome to FashGadget</h1>
-    <p>Shop gadgets, fashion, laptops, and more.</p>
+    <h1>🛍️ FashGadget</h1>
+    <div id="cart-icon">🛒 Cart: <span id="cart-count">0</span></div>
   </header>
 
-  <section class="products">
-    <div class="product">
-      <h3>Wireless Earpods</h3>
-      <p>₦12,000</p>
-    </div>
-    <div class="product">
-      <h3>Men's Smartwatch</h3>
-      <p>₦18,500</p>
-    </div>
-    <div class="product">
-      <h3>Couple Sneakers</h3>
-      <p>₦27,000</p>
-    </div>
+  <main id="product-list">
+    <!-- Products load here via JS -->
+  </main>
+
+  <section id="checkout">
+    <h2>Checkout</h2>
+    <label>Full Name: <input type="text" id="customer-name"></label><br>
+    <label>Address: <input type="text" id="customer-address"></label><br>
+    <label>City/State:
+      <select id="customer-location">
+        <option value="">Select</option>
+        <option value="Lagos">Lagos</option>
+        <option value="Ibadan">Ibadan</option>
+        <option value="Ikire School Area">Ikire School Area</option>
+        <option value="Other">Other</option>
+      </select>
+    </label><br>
+
+    <p><strong>Delivery Fee:</strong> ₦<span id="delivery-fee">0</span></p>
+    <p><strong>Total:</strong> ₦<span id="total-amount">0</span></p>
+    
+    <button id="whatsapp-order">Order via WhatsApp</button>
   </section>
 
   <footer>
-    <p>WhatsApp Orders: 09132888197</p>
+    <p>&copy; 2025 FashGadget | WhatsApp: 09132888197</p>
   </footer>
+
 </body>
 </html>
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
+/* Reset */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #e5e5e5;
   color: #333;
+  padding-bottom: 80px;
 }
 
+/* Header */
 header {
-  background: #ddd;
+  background: #2e2e2e;
+  color: #fff;
   padding: 20px;
   text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-.products {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  padding: 20px;
-}
-
-.product {
+#cart-icon {
+  position: absolute;
+  right: 20px;
+  top: 25px;
   background: #fff;
-  border: 1px solid #ccc;
-  width: 200px;
-  margin: 10px;
-  padding: 15px;
-  border-radius: 8px;
-  text-align: center;
+  color: #2e2e2e;
+  padding: 5px 10px;
+  border-radius: 20px;
 }
 
-footer {
-  background: #222;
-  color: white;
-  text-align: center;
-  padding: 10px;
+/* Product Grid */
+#product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
+
+.product-card {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.product-card img {
+  width: 100%;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.product-card h3 {
+  font-size: 16px;
+  margin: 10px 0 5px;
+}
+
+.product-card p {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.product-card button {
+  background: #555;
+  color: #fff;
+  padding: 8px 15px;
+  border: none;
+  margin-top: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Checkout */
+#checkout {
+  padding: 20px;
+  background: #fff;
+  margin: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#checkout input,
+#checkout select {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+}
+
+#checkout button {
+  background: #0a84ff;
+  color: white;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+/* Footer */
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #222;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+const products = [
+  {
+    id: 1,
+    name: "Wireless Earpods",
+    price: 12000,
+    costPrice: 8000,
+    image: "https://i.imgur.com/FiUKn1j.jpg",
+    rating: 4
+  },
+  {
+    id: 2,
+    name: "Men's Smartwatch",
+    price: 18500,
+    costPrice: 12500,
+    image: "https://i.imgur.com/fRxqg3R.jpg",
+    rating: 5
+  },
+  {
+    id: 3,
+    name: "Couple Sneakers",
+    price: 27000,
+    costPrice: 20000,
+    image: "https://i.imgur.com/j5MfMtw.jpg",
+    rating: 4
+  },
+  {
+    id: 4,
+    name: "Gaming Headset",
+    price: 15000,
+    costPrice: 11000,
+    image: "https://i.imgur.com/xGBmjJr.jpg",
+    rating: 5
+  }
+];
+
+// Render products
+window.addEventListener("DOMContentLoaded", () => {
+  const productList = document.getElementById("product-list");
+  products.forEach(product => {
+    const div = document.createElement("div");
+    div.className = "product-card";
+    div.innerHTML = `
+      <img src="${product.image}" alt="${product.name}">
+      <h3>${product.name}</h3>
+      <p><strong>₦${product.price.toLocaleString()}</strong></p>
+      <p>${"⭐".repeat(product.rating)}${"☆".repeat(5 - product.rating)}</p>
+      <button onclick="addToCart(${product.id})">Add to Cart</button>
+    `;
+    productList.appendChild(div);
+  });
+});
+let cart = [];
+
+function addToCart(productId) {
+  const product = products.find(p => p.id === productId);
+  if (product) {
+    cart.push(product);
+    updateCartCount();
+    updateTotal();
+  }
+}
+
+function updateCartCount() {
+  document.getElementById("cart-count").textContent = cart.length;
+}
+
+function updateTotal() {
+  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  document.getElementById("total-amount").textContent = total.toLocaleString();
+}
+
+// Calculate delivery fee based on location
+document.getElementById("customer-location").addEventListener("change", () => {
+  const location = document.getElementById("customer-location").value;
+  let fee = 0;
+  if (location === "Lagos") fee = 5000;
+  else if (location === "Ibadan") fee = 1500;
+  else if (location === "Ikire School Area") fee = 500;
+  else fee = 0;
+
+  document.getElementById("delivery-fee").textContent = fee.toLocaleString();
+  const cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
+  document.getElementById("total-amount").textContent = (cartTotal + fee).toLocaleString();
+});
+
+// WhatsApp Order
+document.getElementById("whatsapp-order").addEventListener("click", () => {
+  const name = document.getElementById("customer-name").value;
+  const address = document.getElementById("customer-address").value;
+  const location = document.getElementById("customer-location").value;
+  const fee = parseInt(document.getElementById("delivery-fee").textContent.replace(/,/g, '')) || 0;
+  const total = cart.reduce((sum, item) => sum + item.price, 0) + fee;
+
+  if (!name || !address || !location || cart.length === 0) {
+    alert("Please fill all fields and add at least one item to cart.");
+    return;
+  }
+
+  const items = cart.map(item => `- ${item.name} (₦${item.price.toLocaleString()})`).join("\n");
+  const message = `Hello FashGadget,\n\nI want to order the following:\n${items}\n\nDelivery To:\n${name}\n${address}, ${location}\n\nDelivery Fee: ₦${fee.toLocaleString()}\nTotal: ₦${total.toLocaleString()}\n\nPayment: Pay on Delivery (Will pay to store owner)`;
+
+  const phone = "2349132888197";
+  const whatsappURL = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappURL, "_blank");
+});
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Login</title>
-  <link rel="stylesheet" href="../style.css">
+  <meta charset="UTF-8">
+  <title>FashGadget Admin</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="admin.js"></script>
 </head>
 <body>
   <header>
-    <h2>Admin Panel Login</h2>
+    <h1>🔧 FashGadget Admin Panel</h1>
   </header>
 
-  <section class="admin-login">
-    <form action="#" method="POST">
-      <input type="text" placeholder="Username" required><br><br>
-      <input type="password" placeholder="Password" required><br><br>
-      <button type="submit">Login</button>
-    </form>
+  <section id="login-section">
+    <h2>Admin Login</h2>
+    <input type="text" id="admin-user" placeholder="Username"><br>
+    <input type="password" id="admin-pass" placeholder="Password"><br>
+    <button onclick="adminLogin()">Login</button>
+  </section>
+
+  <section id="admin-panel" style="display:none">
+    <h2>Add New Product</h2>
+    <input type="text" id="pname" placeholder="Product Name"><br>
+    <input type="text" id="pimage" placeholder="Image URL"><br>
+    <input type="number" id="psell" placeholder="Selling Price"><br>
+    <input type="number" id="pcost" placeholder="Cost Price"><br>
+    <select id="prating">
+      <option value="5">⭐️⭐️⭐️⭐️⭐️</option>
+      <option value="4">⭐️⭐️⭐️⭐️</option>
+      <option value="3">⭐️⭐️⭐️</option>
+      <option value="2">⭐️⭐️</option>
+      <option value="1">⭐️</option>
+    </select><br>
+    <button onclick="addProduct()">Add Product</button>
+
+    <h2>All Products</h2>
+    <ul id="product-list-admin"></ul>
+
+    <h2>Customer Reviews</h2>
+    <ul id="review-list-admin"></ul>
   </section>
 </body>
 </html>
+let adminLoggedIn = false;
+let reviewData = JSON.parse(localStorage.getItem("reviews") || "[]");
+let productList = JSON.parse(localStorage.getItem("products") || "[]");
+
+function adminLogin() {
+  const user = document.getElementById("admin-user").value;
+  const pass = document.getElementById("admin-pass").value;
+  if (user === "admin" && pass === "SilverG@m3") {
+    adminLoggedIn = true;
+    document.getElementById("login-section").style.display = "none";
+    document.getElementById("admin-panel").style.display = "block";
+    loadProducts();
+    loadReviews();
+  } else {
+    alert("Incorrect login!");
+  }
+}
+
+function addProduct() {
+  const name = document.getElementById("pname").value;
+  const image = document.getElementById("pimage").value;
+  const sell = parseInt(document.getElementById("psell").value);
+  const cost = parseInt(document.getElementById("pcost").value);
+  const rating = parseInt(document.getElementById("prating").value);
+
+  const newProduct = {
+    id: Date.now(),
+    name,
+    image,
+    price: sell,
+    costPrice: cost,
+    rating
+  };
+
+  productList.push(newProduct);
+  localStorage.setItem("products", JSON.stringify(productList));
+  loadProducts();
+}
+
+function deleteProduct(id) {
+  productList = productList.filter(p => p.id !== id);
+  localStorage.setItem("products", JSON.stringify(productList));
+  loadProducts();
+}
+
+function loadProducts() {
+  const list = document.getElementById("product-list-admin");
+  list.innerHTML = "";
+  productList.forEach(p => {
+    const li = document.createElement("li");
+    const profit = p.price - p.costPrice;
+    li.innerHTML = `
+      <strong>${p.name}</strong><br>
+      Sell: ₦${p.price.toLocaleString()} | Cost: ₦${p.costPrice.toLocaleString()} | Profit: ₦${profit.toLocaleString()}<br>
+      <img src="${p.image}" width="80"> 
+      <button onclick="deleteProduct(${p.id})">Delete</button>
+      <hr>
+    `;
+    list.appendChild(li);
+  });
+}
+
+// Review moderation
+function loadReviews() {
+  const reviewList = document.getElementById("review-list-admin");
+  reviewList.innerHTML = "";
+  reviewData.forEach((r, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <strong>${r.name}</strong> (${r.stars}⭐): ${r.text}
+      <button onclick="approveReview(${i})">Approve</button>
+      <button onclick="deleteReview(${i})">Delete</button>
+      <hr>
+    `;
+    reviewList.appendChild(li);
+  });
+}
+
+function approveReview(i) {
+  reviewData[i].approved = true;
+  localStorage.setItem("reviews", JSON.stringify(reviewData));
+  loadReviews();
+}
+
+function deleteReview(i) {
+  reviewData.splice(i, 1);
+  localStorage.setItem("reviews", JSON.stringify(reviewData));
+  loadReviews();
+}
+// Load reviews for customers
+let allReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+
+function renderReviews() {
+  const section = document.createElement("section");
+  section.innerHTML = `<h3>Customer Reviews</h3>`;
+  allReviews.filter(r => r.approved).forEach(r => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <p><strong>${r.name}</strong> (${r.stars}⭐): ${r.text}</p>
+    `;
+    section.appendChild(div);
+  });
+
+  const form = document.createElement("form");
+  form.innerHTML = `
+    <h4>Leave a Review</h4>
+    <input type="text" id="rname" placeholder="Your name" required><br>
+    <textarea id="rtext" placeholder="Your review" required></textarea><br>
+    <label>Rating:
+      <select id="rstars">
+        <option value="5">⭐️⭐️⭐️⭐️⭐️</option>
+        <option value="4">⭐️⭐️⭐️⭐️</option>
+        <option value="3">⭐️⭐️⭐️</option>
+        <option value="2">⭐️⭐️</option>
+        <option value="1">⭐️</option>
+      </select>
+    </label><br>
+    <button type="submit">Submit Review</button>
+  `;
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const name = document.getElementById("rname").value;
+    const text = document.getElementById("rtext").value;
+    const stars = document.getElementById("rstars").value;
+    const newReview = { name, text, stars, approved: false };
+    allReviews.push(newReview);
+    localStorage.setItem("reviews", JSON.stringify(allReviews));
+    alert("Review submitted! Pending approval.");
+    form.reset();
+  });
+
+  section.appendChild(form);
+  document.body.appendChild(section);
+}
+
+window.addEventListener("DOMContentLoaded", renderReviews);

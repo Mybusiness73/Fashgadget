@@ -7,23 +7,39 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f5f9ff;
+      background-color: #f0f4ff;
       margin: 0;
       padding: 0;
       color: #222;
     }
+
     header {
-      background-color: #003366;
+      background-color: #001f3f;
       color: gold;
       padding: 20px;
       text-align: center;
     }
+
+    .search-bar {
+      text-align: center;
+      padding: 10px;
+    }
+
+    .search-bar input {
+      padding: 10px;
+      width: 80%;
+      max-width: 500px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
     .products {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 20px;
       padding: 20px;
     }
+
     .product {
       background-color: #fff;
       border-radius: 10px;
@@ -31,6 +47,7 @@
       text-align: center;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
+
     .product img {
       width: 100%;
       height: 200px;
@@ -38,79 +55,94 @@
       border-radius: 8px;
       cursor: pointer;
     }
-    .cart, .admin-panel, .order-box, .review-section {
+
+    .cart, .admin-panel {
       background-color: #fff;
       margin: 20px;
       padding: 15px;
       border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
+
     .footer {
       text-align: center;
       padding: 20px;
       color: #555;
+      background-color: #e6eaff;
     }
+
     input, select, button, textarea {
       padding: 8px;
       margin: 5px 0;
       width: 100%;
       border-radius: 6px;
       border: 1px solid #ccc;
-      font-family: inherit;
+      box-sizing: border-box;
     }
+
     button {
-      background-color: #003366;
-      color: white;
+      background-color: #001f3f;
+      color: gold;
       border: none;
       cursor: pointer;
+      font-weight: bold;
     }
+
     button:hover {
-      background-color: #002244;
+      background-color: #003366;
     }
+
+    .review-section {
+      margin: 20px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+    .review {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
     .hidden-tap {
       position: fixed;
       bottom: 0;
       left: 0;
-      width: 50px;
-      height: 50px;
-      opacity: 0;
-      z-index: 9999;
+      width: 30px;
+      height: 30px;
+      z-index: 1000;
     }
-    .search-bar {
-      padding: 10px;
-      text-align: center;
-    }
-    .search-bar input {
-      width: 60%;
-    }
+
     #productModal {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       background: rgba(0,0,0,0.7);
       display: none;
       justify-content: center;
       align-items: center;
+      z-index: 999;
     }
+
     #modalContent {
       background: white;
-      border-radius: 10px;
       padding: 20px;
-      width: 90%;
+      border-radius: 8px;
       max-width: 600px;
       max-height: 90vh;
       overflow-y: auto;
+      text-align: center;
     }
+
     #modalContent img {
       width: 100%;
-      margin-bottom: 10px;
+      margin: 5px 0;
       border-radius: 8px;
     }
-    .review {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
+
+    #modalContent button.back-btn {
+      background: crimson;
+      margin-top: 15px;
     }
   </style>
 </head>
@@ -118,11 +150,11 @@
 
   <header>
     <h1>FashGadget</h1>
-    <p>Tech & Fashion for Everyone</p>
+    <p>Tech Meets Style – For Men, Women & Couples</p>
   </header>
 
   <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Search products..." onkeyup="searchProducts()" />
+    <input type="text" id="searchInput" placeholder="Search for gadgets or outfits..." oninput="searchProducts()"/>
   </div>
 
   <div class="products" id="product-list"></div>
@@ -153,158 +185,139 @@
       <option value="Other">Other</option>
     </select>
 
-    <button onclick="submitOrder()">Submit Order</button>
+    <label>Upload Payment Screenshot:</label>
+    <input type="file" id="paymentProof" accept="image/*" />
+
+    <button onclick="verifyAndSend()">Submit Order</button>
   </div>
-    <div class="review-section">
-    <h3>Customer Reviews</h3>
-    <div id="reviews-list"></div>
+   <div class="review-section">
+    <h3>What Our Customers Are Saying</h3>
+    <div id="review-list"></div>
   </div>
 
   <div class="footer">
     <p><strong>Opay Account:</strong> Sulaimon Olamide Salimo<br>
     Account Number: <strong>8108964507</strong></p>
-    <p>&copy; 2025 FashGadget</p>
+    <p>&copy; 2025 FashGadget. All rights reserved.</p>
   </div>
 
-  <div class="hidden-tap" onclick="handleAdminTap()"></div>
+  <div class="hidden-tap" onclick="handleSecretTap()"></div>
 
   <div class="admin-panel" id="adminPanel" style="display: none;">
     <h3>Admin Panel</h3>
-    <div id="adminLoginBox">
+    <div id="adminContent">
       <label>Password:</label>
       <input type="password" id="adminPass" placeholder="Enter password" />
       <button onclick="loginAdmin()">Login</button>
     </div>
-    <div id="adminArea" style="display:none;">
-      <h4>Add / Edit Product</h4>
-      <input type="text" id="prodName" placeholder="Product Name" />
-      <input type="number" id="prodPrice" placeholder="Price" />
-      <input type="number" id="prodStock" placeholder="Stock" />
-      <input type="text" id="prodSizes" placeholder="Sizes (comma separated)" />
-      <textarea id="prodDesc" placeholder="Product Description"></textarea>
-      <input type="text" id="prodImgs" placeholder="Image URLs (comma separated)" />
+    <div id="adminControls" style="display:none;">
+      <h4>Add/Edit Product</h4>
+      <input type="text" id="newName" placeholder="Product name" />
+      <input type="text" id="newPrice" placeholder="Price" />
+      <input type="number" id="newStock" placeholder="Stock" />
+      <textarea id="newDesc" placeholder="Description"></textarea>
+      <input type="text" id="newSizes" placeholder="Sizes (comma separated)" />
+      <input type="text" id="newImages" placeholder="Image URLs (comma separated)" />
       <button onclick="addProduct()">Save Product</button>
 
-      <h4>Products</h4>
-      <ul id="adminProductList"></ul>
+      <h4>All Products</h4>
+      <ul id="admin-product-list"></ul>
+
+      <h4>Orders</h4>
+      <ul id="order-list"></ul>
+
+      <h4>Moderate Reviews</h4>
+      <ul id="admin-review-list"></ul>
     </div>
   </div>
 
   <div id="productModal">
-    <div id="modalContent"></div>
+    <div id="modalContent">
+      <h3 id="modalTitle"></h3>
+      <div id="modalImages"></div>
+      <p id="modalDesc"></p>
+      <p><strong>Sizes:</strong> <span id="modalSizes"></span></p>
+      <button class="back-btn" onclick="closeModal()">Back</button>
+    </div>
   </div>
-
-  <input type="file" id="reviewImageInput" accept="image/*" style="display:none;" onchange="previewReviewImage(event)" />
   <script>
-  const products = [
-    {
-      id: 0,
-      name: "Bluetooth Smartwatch",
-      price: 28000,
-      stock: 5,
-      images: [
-        "https://i.imgur.com/8uMiO7D.jpeg",
-        "https://i.imgur.com/lWbssiO.jpeg",
-        "https://i.imgur.com/hRoMhrK.jpeg"
-      ],
-      description: "Track your steps, heart rate, and messages in style.",
-      sizes: ["S", "M", "L", "XL"],
-      reviews: []
-    },
-    {
-      id: 1,
-      name: "Couple Matching Techwear",
-      price: 45000,
-      stock: 3,
-      images: [
-        "https://i.imgur.com/l6yy92y.jpeg",
-        "https://i.imgur.com/VZa8Mgn.jpeg",
-        "https://i.imgur.com/imB9Odu.jpeg"
-      ],
-      description: "Trendy up & down outfit for couples. Great fit and quality.",
-      sizes: ["S", "M", "L", "XL"],
-      reviews: []
-    }
-  ];
-
+  let products = [];
   let cart = [];
+  let reviews = [];
+  let orders = [];
   let adminClicks = 0;
 
-  function renderProducts(list = products) {
-    const el = document.getElementById("product-list");
-    el.innerHTML = "";
-    list.forEach((p, index) => {
+  function renderProducts() {
+    const list = document.getElementById("product-list");
+    list.innerHTML = "";
+    products.forEach((p, i) => {
       const div = document.createElement("div");
       div.className = "product";
       div.innerHTML = `
-        <img src="${p.images[0]}" onclick="showProductModal(${index})" />
+        <img src="${p.images[0]}" onclick="showModal(${i})" />
         <h4>${p.name}</h4>
         <p>₦${p.price.toLocaleString()}</p>
-        <p>Stock: ${p.stock}</p>
-        <input type="number" id="qty-${index}" min="1" max="${p.stock}" value="1" />
-        <button onclick="addToCart(${index})">Add to Cart</button>
+        <p>In stock: ${p.stock}</p>
+        <input type="number" id="qty-${i}" min="1" max="${p.stock}" value="1" />
+        <button onclick="addToCart(${i})">Add to Cart</button>
       `;
-      el.appendChild(div);
+      list.appendChild(div);
     });
   }
 
   function addToCart(index) {
     const qty = parseInt(document.getElementById(`qty-${index}`).value);
-    if (qty > products[index].stock) {
-      alert("Not enough stock");
-      return;
-    }
-    cart.push({ ...products[index], quantity: qty });
+    if (qty > products[index].stock) return alert("Not enough stock");
+    const item = {...products[index], quantity: qty};
+    cart.push(item);
     products[index].stock -= qty;
     renderProducts();
     updateCart();
   }
 
   function updateCart() {
-    const list = document.getElementById("cart-items");
+    let list = document.getElementById("cart-items");
     list.innerHTML = "";
-    let total = 0, count = 0;
+    let total = 0;
     cart.forEach((item, i) => {
-      const li = document.createElement("li");
-      li.textContent = `${item.name} (x${item.quantity}) - ₦${(item.price * item.quantity).toLocaleString()}`;
-      const removeBtn = document.createElement("button");
-      removeBtn.textContent = "❌";
-      removeBtn.onclick = () => removeFromCart(i);
-      li.appendChild(removeBtn);
-      list.appendChild(li);
-      count += item.quantity;
       total += item.price * item.quantity;
+      const li = document.createElement("li");
+      li.innerHTML = `${item.name} (x${item.quantity}) - ₦${item.price * item.quantity} <button onclick="removeFromCart(${i})">❌</button>`;
+      list.appendChild(li);
     });
-    document.getElementById("cart-count").textContent = count;
+    document.getElementById("cart-count").textContent = cart.length;
     document.getElementById("total-amount").textContent = total.toLocaleString();
   }
 
-  function removeFromCart(index) {
-    const item = cart[index];
-    products.find(p => p.id === item.id).stock += item.quantity;
-    cart.splice(index, 1);
-    renderProducts();
+  function removeFromCart(i) {
+    products.find(p => p.name === cart[i].name).stock += cart[i].quantity;
+    cart.splice(i, 1);
     updateCart();
+    renderProducts();
   }
 
-  function submitOrder() {
-    const name = document.getElementById("fullname").value;
-    const phone = document.getElementById("phone").value;
-    const address = document.getElementById("address").value;
-    const state = document.getElementById("state").value;
-    if (!name || !phone || !address || !state || cart.length === 0) {
-      alert("Please complete all fields and cart.");
-      return;
-    }
-
-    const order = cart.map(i => `${i.name} (x${i.quantity})`).join(", ");
-    const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-
-    const msg = `Hello, FashGadget. I just made my payment and have uploaded the receipt. Kindly confirm and proceed with my order. Thank you!\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n🏡 Address: ${address}, ${state}\n🛍️ Order: ${order}\n💳 Total: ₦${total.toLocaleString()}`;
-    window.location.href = `https://wa.me/2349132888197?text=${encodeURIComponent(msg)}`;
+  function searchProducts() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    document.querySelectorAll(".product").forEach(prod => {
+      const text = prod.textContent.toLowerCase();
+      prod.style.display = text.includes(input) ? "block" : "none";
+    });
   }
 
-  function handleAdminTap() {
+  function showModal(index) {
+    const p = products[index];
+    document.getElementById("modalTitle").innerText = p.name;
+    document.getElementById("modalImages").innerHTML = p.images.map(img => `<img src="${img}"/>`).join("");
+    document.getElementById("modalDesc").innerText = p.description;
+    document.getElementById("modalSizes").innerText = p.sizes.join(", ");
+    document.getElementById("productModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("productModal").style.display = "none";
+  }
+
+  function handleSecretTap() {
     adminClicks++;
     if (adminClicks >= 6) {
       document.getElementById("adminPanel").style.display = "block";
@@ -313,77 +326,117 @@
   }
 
   function loginAdmin() {
-    const pass = document.getElementById("adminPass").value;
-    if (pass === "Busayomi1") {
-      document.getElementById("adminLoginBox").style.display = "none";
-      document.getElementById("adminArea").style.display = "block";
-      renderAdminProducts();
-    } else {
-      alert("Wrong password.");
-    }
+    if (document.getElementById("adminPass").value === "Busayomi1") {
+      document.getElementById("adminControls").style.display = "block";
+      renderAdminPanel();
+    } else alert("Wrong password");
   }
 
-  function renderAdminProducts() {
-    const list = document.getElementById("adminProductList");
+  function renderAdminPanel() {
+    const list = document.getElementById("admin-product-list");
     list.innerHTML = "";
     products.forEach((p, i) => {
       const li = document.createElement("li");
-      li.textContent = `${p.name} - ₦${p.price} (Stock: ${p.stock})`;
-      const del = document.createElement("button");
-      del.textContent = "❌";
-      del.onclick = () => {
-        products.splice(i, 1);
-        renderProducts();
-        renderAdminProducts();
-      };
-      li.appendChild(del);
+      li.innerHTML = `${p.name} (₦${p.price}, stock: ${p.stock}) 
+      <button onclick="deleteProduct(${i})">Delete</button>`;
       list.appendChild(li);
     });
+
+    const orderList = document.getElementById("order-list");
+    orderList.innerHTML = orders.map(o => `
+      <li>${o.name} - ₦${o.total} <button onclick="confirmOrder(${o.id})">Confirm</button> 
+      <button onclick="rejectOrder(${o.id})">Reject</button></li>
+    `).join("");
+
+    const revList = document.getElementById("admin-review-list");
+    revList.innerHTML = reviews.map((r, i) => `
+      <li>${r.name}: ${r.text} <button onclick="deleteReview(${i})">❌</button></li>
+    `).join("");
   }
 
   function addProduct() {
-    const name = document.getElementById("prodName").value.trim();
-    const price = parseInt(document.getElementById("prodPrice").value);
-    const stock = parseInt(document.getElementById("prodStock").value);
-    const sizes = document.getElementById("prodSizes").value.split(",").map(s => s.trim());
-    const desc = document.getElementById("prodDesc").value.trim();
-    const images = document.getElementById("prodImgs").value.split(",").map(i => i.trim());
-
-    if (!name || !price || !images.length) {
-      alert("Please fill all product fields");
-      return;
-    }
-
-    products.push({ id: Date.now(), name, price, stock, sizes, description: desc, images, reviews: [] });
+    const p = {
+      name: document.getElementById("newName").value,
+      price: parseInt(document.getElementById("newPrice").value),
+      stock: parseInt(document.getElementById("newStock").value),
+      description: document.getElementById("newDesc").value,
+      sizes: document.getElementById("newSizes").value.split(","),
+      images: document.getElementById("newImages").value.split(",")
+    };
+    products.push(p);
     renderProducts();
-    renderAdminProducts();
-    alert("Product added!");
+    renderAdminPanel();
   }
 
-  function showProductModal(index) {
-    const p = products[index];
-    const modal = document.getElementById("productModal");
-    const html = `
-      <h3>${p.name}</h3>
-      ${p.images.map(i => `<img src="${i}" />`).join("")}
-      <p><strong>Description:</strong> ${p.description}</p>
-      <p><strong>Price:</strong> ₦${p.price.toLocaleString()}</p>
-      <p><strong>Available Sizes:</strong> ${p.sizes.join(", ")}</p>
-      <button onclick="addToCart(${index})">Add to Cart</button>
-    `;
-    document.getElementById("modalContent").innerHTML = html;
-    modal.style.display = "flex";
-    modal.onclick = () => modal.style.display = "none";
+  function deleteProduct(i) {
+    products.splice(i, 1);
+    renderProducts();
+    renderAdminPanel();
   }
 
-  function searchProducts() {
-    const val = document.getElementById("searchInput").value.toLowerCase();
-    const results = products.filter(p => p.name.toLowerCase().includes(val));
-    renderProducts(results);
+  function deleteReview(i) {
+    reviews.splice(i, 1);
+    renderAdminPanel();
   }
 
-  window.onload = () => renderProducts();
+  function confirmOrder(id) {
+    alert(`Order #${id} confirmed!`);
+  }
+
+  function rejectOrder(id) {
+    alert(`Order #${id} rejected!`);
+  }
+
+  function verifyAndSend() {
+    const name = document.getElementById("fullname").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const addr = document.getElementById("address").value.trim();
+    const state = document.getElementById("state").value;
+    const proof = document.getElementById("paymentProof").files[0];
+
+    if (!name || !phone || !addr || !state || !proof) return alert("Please fill all fields and upload receipt");
+
+    const total = cart.reduce((t, i) => t + i.price * i.quantity, 0);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const msg = `Hello, FashGadget. I just made my payment and have uploaded the receipt. Kindly confirm and proceed with my order. Thank you!\n\nName: ${name}\nPhone: ${phone}\nAddress: ${addr}, ${state}\nTotal: ₦${total.toLocaleString()}\nAccount Paid: 8108964507 – Sulaimon Olamide Salimo`;
+
+      const url = `https://wa.me/2349132888197?text=${encodeURIComponent(msg)}`;
+      window.location.href = url;
+    };
+    reader.readAsDataURL(proof);
+  }
+
+  window.onload = () => {
+    // EXAMPLE DEFAULT PRODUCTS
+    products = [
+      {
+        name: "Couple Smartwatch Set",
+        price: 38000,
+        stock: 3,
+        description: "Stylish his & hers smartwatches with health tracking.",
+        sizes: ["One Size"],
+        images: [
+          "https://i.imgur.com/8uMiO7D.jpeg",
+          "https://i.imgur.com/lWbssiO.jpeg",
+          "https://i.imgur.com/VZa8Mgn.jpeg"
+        ]
+      },
+      {
+        name: "Wireless Earbuds",
+        price: 15000,
+        stock: 4,
+        description: "Clear sound, noise-cancelling, long battery life.",
+        sizes: ["One Size"],
+        images: [
+          "https://i.imgur.com/l6yy92y.jpeg",
+          "https://i.imgur.com/imB9Odu.jpeg"
+        ]
+      }
+    ];
+    renderProducts();
+  };
 </script>
-
 </body>
 </html>

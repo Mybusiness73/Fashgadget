@@ -1,199 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FashGadget</title>
-  <link rel="stylesheet" href="style.css">
-  <script defer src="products.js"></script>
-  <script defer src="cart.js"></script>
-  <script defer src="reviews.js"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
     <h1>FashGadget</h1>
-    <div class="cart-info">🛒 Cart: <span id="cart-count">0</span></div>
+    <p class="tagline">Tech & Fashion That Stands Out</p>
+    <div class="cart-count">🛒 Cart: <span id="cart-count">0</span></div>
   </header>
 
-  <main>
-    <section id="product-list" class="product-section"></section>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search for a product..." />
+  </div>
 
-    <section id="checkout" class="checkout-section">
-      <h2>Checkout</h2>
-      <input type="text" id="customer-name" placeholder="Full Name" required>
-      <input type="text" id="customer-address" placeholder="Address" required>
-      <select id="customer-location">
-        <option value="">City/State</option>
-        <option value="Lagos">Lagos</option>
-        <option value="Ibadan">Ibadan</option>
-        <option value="Ikire School Area">Ikire School Area</option>
-        <option value="Other">Other</option>
-      </select>
-      <p>Delivery Fee: ₦<span id="delivery-fee">0</span></p>
-      <p>Total: ₦<span id="total-amount">0</span></p>
-      <button id="whatsapp-order">Order via WhatsApp</button>
-    </section>
+  <main id="product-list" class="product-section"></main>
 
-    <section id="reviews-section"></section>
-  </main>
+  <section class="checkout-section">
+    <h2>Checkout</h2>
+    <input type="text" id="customer-name" placeholder="Full Name" />
+    <input type="text" id="customer-address" placeholder="Address" />
+    <select id="customer-location">
+      <option value="">Select State</option>
+      <option value="Lagos">Lagos</option>
+      <option value="Ibadan">Ibadan</option>
+      <option value="Ikire School Area">Ikire School Area</option>
+    </select>
+    <p><strong>Delivery Fee:</strong> ₦<span id="delivery-fee">0</span></p>
+    <p><strong>Total:</strong> ₦<span id="total-amount">0</span></p>
+    <button id="whatsapp-order">Order via WhatsApp</button>
+  </section>
+
+  <section id="reviews-section"></section>
 
   <footer>
-    <p>&copy; 2025 FashGadget | WhatsApp: 09132888197</p>
-    <div id="secret-tap" onclick="triggerAdminTap()"></div>
+    &copy; 2025 FashGadget | WhatsApp: 09132888197
   </footer>
 
-  <script>
-    let tapCount = 0;
-    function triggerAdminTap() {
-      tapCount++;
-      if (tapCount >= 6) {
-        window.location.href = "admin.html";
-      }
-      setTimeout(() => tapCount = 0, 3000);
-    }
-  </script>
+  <div id="secret-tap"></div>
+
+  <script src="products.js"></script>
+  <script src="cart.js"></script>
+  <script src="reviews.js"></script>
 </body>
 </html>
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #f0f2f5;
+  background: #f4f6fa;
   color: #222;
 }
-
 header {
   background: #003366;
-  color: white;
-  padding: 20px;
+  color: #fff;
   text-align: center;
+  padding: 25px 15px;
 }
 header h1 {
   font-size: 28px;
-  margin-bottom: 8px;
 }
-.cart-info {
+.tagline {
+  font-size: 14px;
+  color: #ffd700;
+}
+.cart-count {
   background: #ffd700;
   color: #000;
-  padding: 6px 15px;
-  border-radius: 30px;
   display: inline-block;
+  margin-top: 10px;
+  padding: 5px 12px;
+  border-radius: 30px;
   font-size: 14px;
 }
-
+.search-box {
+  text-align: center;
+  padding: 20px;
+}
+.search-box input {
+  width: 80%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
 .product-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
   padding: 20px;
 }
 .product-card {
-  background: white;
-  border-radius: 10px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   padding: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   text-align: center;
-  transition: transform 0.2s;
-}
-.product-card:hover {
-  transform: scale(1.02);
 }
 .product-card img {
   width: 100%;
-  height: 180px;
+  height: 200px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 .product-card h3 {
+  margin: 12px 0 5px;
   font-size: 16px;
-  margin-top: 10px;
 }
 .product-card p {
-  font-size: 14px;
   margin: 4px 0;
+  font-size: 14px;
 }
 .product-card button {
+  margin-top: 10px;
+  width: 100%;
   background: #003366;
   color: white;
+  padding: 10px;
   border: none;
-  padding: 8px 15px;
-  margin-top: 8px;
   border-radius: 6px;
+  font-size: 14px;
   cursor: pointer;
 }
-
 .checkout-section {
-  background: #fff;
-  padding: 20px;
-  margin: 30px auto;
+  background: white;
   max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 .checkout-section input,
 .checkout-section select {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin: 10px 0;
-  border: 1px solid #ccc;
   border-radius: 6px;
-  font-size: 14px;
+  border: 1px solid #ccc;
 }
 .checkout-section button {
+  width: 100%;
+  padding: 12px;
   background: #ffd700;
   color: #000;
-  padding: 12px;
-  width: 100%;
   font-size: 16px;
   border: none;
   border-radius: 6px;
-  cursor: pointer;
 }
-
 #reviews-section {
-  background: white;
-  margin: 40px auto;
-  padding: 20px;
   max-width: 700px;
+  margin: 30px auto;
+  background: white;
+  padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
-.review-card {
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-}
-#reviews-section input,
-#reviews-section textarea,
-#reviews-section select {
-  width: 100%;
-  margin: 8px 0;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-#reviews-section button {
-  background: #003366;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
 footer {
   background: #003366;
-  color: #fff;
+  color: white;
   text-align: center;
-  padding: 15px;
+  padding: 20px;
   font-size: 13px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
 }
-
 #secret-tap {
   position: absolute;
   bottom: 0;
@@ -202,291 +175,84 @@ footer {
   height: 30px;
 }
 const products = [
-  {
-    id: 1,
-    name: "Wireless Earpods",
-    price: 12000,
-    costPrice: 8000,
-    image: "https://i.imgur.com/FiUKn1j.jpg",
-    rating: 4
-  },
-  {
-    id: 2,
-    name: "Men's Smartwatch",
-    price: 18500,
-    costPrice: 12500,
-    image: "https://i.imgur.com/fRxqg3R.jpg",
-    rating: 5
-  },
-  {
-    id: 3,
-    name: "Couple Sneakers",
-    price: 27000,
-    costPrice: 20000,
-    image: "https://i.imgur.com/j5MfMtw.jpg",
-    rating: 4
-  },
-  {
-    id: 4,
-    name: "Gaming Headset",
-    price: 15000,
-    costPrice: 11000,
-    image: "https://i.imgur.com/xGBmjJr.jpg",
-    rating: 5
-  }
+  { id: 1, name: "Wireless Earbuds", price: 12000, image: "https://i.imgur.com/FtUKnlJ.jpg", rating: 4 },
+  { id: 2, name: "Smartwatch", price: 20000, image: "https://i.imgur.com/fRxq3R.jpg", rating: 5 },
+  { id: 3, name: "Couple Sneakers", price: 27000, image: "https://i.imgur.com/j5MfMtw.jpg", rating: 4 },
+  { id: 4, name: "Gaming Headset", price: 15000, image: "https://i.imgur.com/xGBmJrJ.jpg", rating: 5 }
 ];
 
-window.addEventListener("DOMContentLoaded", () => {
+function renderProducts(filter = "") {
   const productList = document.getElementById("product-list");
-  products.forEach(product => {
+  productList.innerHTML = "";
+  products.filter(p => p.name.toLowerCase().includes(filter.toLowerCase())).forEach(product => {
     const div = document.createElement("div");
     div.className = "product-card";
     div.innerHTML = `
-      <img src="${product.image}" alt="${product.name}">
+      <img src="${product.image}" alt="${product.name}" />
       <h3>${product.name}</h3>
-      <p><strong>₦${product.price.toLocaleString()}</strong></p>
+      <p>₦${product.price.toLocaleString()}</p>
       <p>${"⭐".repeat(product.rating)}${"☆".repeat(5 - product.rating)}</p>
       <button onclick="addToCart(${product.id})">Add to Cart</button>
     `;
     productList.appendChild(div);
   });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderProducts();
+  document.getElementById("searchInput").addEventListener("input", e => {
+    renderProducts(e.target.value);
+  });
 });
 let cart = [];
-
 function addToCart(productId) {
   const product = products.find(p => p.id === productId);
-  if (product) {
-    cart.push(product);
-    updateCartCount();
-    updateTotal();
-  }
+  if (product) cart.push(product);
+  updateCart();
 }
-
-function updateCartCount() {
+function updateCart() {
   document.getElementById("cart-count").textContent = cart.length;
-}
-
-function updateTotal() {
-  const delivery = getDeliveryFee();
-  const total = cart.reduce((sum, item) => sum + item.price, 0) + delivery;
-  document.getElementById("total-amount").textContent = total.toLocaleString();
-  document.getElementById("delivery-fee").textContent = delivery.toLocaleString();
-}
-
-function getDeliveryFee() {
+  let total = cart.reduce((sum, item) => sum + item.price, 0);
   const location = document.getElementById("customer-location").value;
-  if (location === "Lagos") return 5000;
-  if (location === "Ibadan") return 1500;
-  if (location === "Ikire School Area") return 500;
-  return 0;
+  let fee = 0;
+  if (location === "Lagos") fee = 5000;
+  else if (location === "Ibadan") fee = 1500;
+  else if (location === "Ikire School Area") fee = 500;
+  document.getElementById("delivery-fee").textContent = fee.toLocaleString();
+  document.getElementById("total-amount").textContent = (total + fee).toLocaleString();
 }
 
-document.getElementById("customer-location").addEventListener("change", updateTotal);
-
+document.getElementById("customer-location").addEventListener("change", updateCart);
 document.getElementById("whatsapp-order").addEventListener("click", () => {
-  const name = document.getElementById("customer-name").value.trim();
-  const address = document.getElementById("customer-address").value.trim();
-  const location = document.getElementById("customer-location").value.trim();
-  const fee = getDeliveryFee();
-  const total = cart.reduce((sum, item) => sum + item.price, 0) + fee;
-
-  if (!name || !address || !location || cart.length === 0) {
-    alert("❗ Please fill in all fields and add items.");
-    return;
-  }
-
-  const items = cart.map(item => `- ${item.name} (₦${item.price.toLocaleString()})`).join("\n");
-  const message = `Hello FashGadget 👋,\n\nI want to order:\n${items}\n\n📦 Name: ${name}\n📍 Address: ${address}\n📍 Location: ${location}\n\n🚚 Delivery: ₦${fee.toLocaleString()}\n💵 Total: ₦${total.toLocaleString()}\n\nI'll pay on delivery.`;
-
-  const whatsappURL = `https://wa.me/2349132888197?text=${encodeURIComponent(message)}`;
-  window.open(whatsappURL, "_blank");
+  const name = document.getElementById("customer-name").value;
+  const address = document.getElementById("customer-address").value;
+  const location = document.getElementById("customer-location").value;
+  const orderText = cart.map(p => `- ${p.name} ₦${p.price.toLocaleString()}`).join("%0A");
+  const total = document.getElementById("total-amount").textContent;
+  const msg = `Hello, my name is ${name}.%0AAddress: ${address}, ${location}.%0AOrder:%0A${orderText}%0ATotal: ₦${total}`;
+  window.open(`https://wa.me/2349132888197?text=${msg}`);
 });
-let allReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+document.getElementById("reviews-section").innerHTML = `
+  <h2>Customer Reviews</h2>
+  <div id="review-list"></div>
+  <textarea id="review-input" placeholder="Leave your review..."></textarea>
+  <select id="review-rating">
+    <option value="5">⭐️⭐️⭐️⭐️⭐️</option>
+    <option value="4">⭐️⭐️⭐️⭐️</option>
+    <option value="3">⭐️⭐️⭐️</option>
+    <option value="2">⭐️⭐️</option>
+    <option value="1">⭐️</option>
+  </select>
+  <button onclick="submitReview()">Submit Review</button>
+`;
 
-function renderReviews() {
-  const section = document.getElementById("reviews-section");
-  section.innerHTML = `<h3>Customer Reviews</h3>`;
-
-  // Show approved reviews
-  allReviews.filter(r => r.approved).forEach(r => {
-    const div = document.createElement("div");
-    div.className = "review-card";
-    div.innerHTML = `
-      <p><strong>${r.name}</strong> (${r.stars}⭐): ${r.text}</p>
-    `;
-    section.appendChild(div);
-  });
-
-  // Review form
-  const form = document.createElement("form");
-  form.innerHTML = `
-    <h4>Leave a Review</h4>
-    <input type="text" id="rname" placeholder="Your name" required>
-    <textarea id="rtext" placeholder="Your review" required></textarea>
-    <label>Rating:
-      <select id="rstars">
-        <option value="5">⭐️⭐️⭐️⭐️⭐️</option>
-        <option value="4">⭐️⭐️⭐️⭐️</option>
-        <option value="3">⭐️⭐️⭐️</option>
-        <option value="2">⭐️⭐️</option>
-        <option value="1">⭐️</option>
-      </select>
-    </label>
-    <button type="submit">Submit Review</button>
-  `;
-
-  form.addEventListener("submit", e => {
-    e.preventDefault();
-    const name = document.getElementById("rname").value.trim();
-    const text = document.getElementById("rtext").value.trim();
-    const stars = document.getElementById("rstars").value;
-
-    if (!name || !text) {
-      alert("Please fill in all fields.");
-      return;
-    }
-
-    const newReview = { name, text, stars, approved: false };
-    allReviews.push(newReview);
-    localStorage.setItem("reviews", JSON.stringify(allReviews));
-    alert("✅ Review submitted! It will show once approved.");
-    form.reset();
-  });
-
-  section.appendChild(form);
-}
-
-window.addEventListener("DOMContentLoaded", renderReviews);
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>FashGadget Admin</title>
-  <link rel="stylesheet" href="style.css">
-  <script defer src="admin.js"></script>
-</head>
-<body>
-  <header>
-    <h2>🔒 Admin Panel - FashGadget</h2>
-  </header>
-
-  <section id="login-section">
-    <h3>Login</h3>
-    <input type="text" id="admin-user" placeholder="Username"><br>
-    <input type="password" id="admin-pass" placeholder="Password"><br>
-    <button onclick="adminLogin()">Login</button>
-  </section>
-
-  <section id="admin-panel" style="display:none">
-    <h3>➕ Add Product</h3>
-    <input type="text" id="pname" placeholder="Product Name"><br>
-    <input type="text" id="pimage" placeholder="Image URL"><br>
-    <input type="number" id="psell" placeholder="Selling Price"><br>
-    <input type="number" id="pcost" placeholder="Cost Price"><br>
-    <label>Rating:
-      <select id="prating">
-        <option value="5">⭐️⭐️⭐️⭐️⭐️</option>
-        <option value="4">⭐️⭐️⭐️⭐️</option>
-        <option value="3">⭐️⭐️⭐️</option>
-        <option value="2">⭐️⭐️</option>
-        <option value="1">⭐️</option>
-      </select>
-    </label><br>
-    <button onclick="addProduct()">Add Product</button>
-
-    <h3>🛍️ All Products</h3>
-    <ul id="product-list-admin"></ul>
-
-    <h3>💬 Review Moderation</h3>
-    <ul id="review-list-admin"></ul>
-  </section>
-</body>
-</html>
-let adminLoggedIn = false;
-let reviewData = JSON.parse(localStorage.getItem("reviews") || "[]");
-let productList = JSON.parse(localStorage.getItem("products") || "[]");
-
-function adminLogin() {
-  const user = document.getElementById("admin-user").value;
-  const pass = document.getElementById("admin-pass").value;
-  if (user === "admin" && pass === "SilverG@m3") {
-    adminLoggedIn = true;
-    document.getElementById("login-section").style.display = "none";
-    document.getElementById("admin-panel").style.display = "block";
-    loadProducts();
-    loadReviews();
-  } else {
-    alert("Incorrect login!");
-  }
-}
-
-function addProduct() {
-  const name = document.getElementById("pname").value;
-  const image = document.getElementById("pimage").value;
-  const sell = parseInt(document.getElementById("psell").value);
-  const cost = parseInt(document.getElementById("pcost").value);
-  const rating = parseInt(document.getElementById("prating").value);
-
-  const newProduct = {
-    id: Date.now(),
-    name,
-    image,
-    price: sell,
-    costPrice: cost,
-    rating
-  };
-
-  productList.push(newProduct);
-  localStorage.setItem("products", JSON.stringify(productList));
-  loadProducts();
-}
-
-function deleteProduct(id) {
-  productList = productList.filter(p => p.id !== id);
-  localStorage.setItem("products", JSON.stringify(productList));
-  loadProducts();
-}
-
-function loadProducts() {
-  const list = document.getElementById("product-list-admin");
-  list.innerHTML = "";
-  productList.forEach(p => {
-    const li = document.createElement("li");
-    const profit = p.price - p.costPrice;
-    li.innerHTML = `
-      <strong>${p.name}</strong><br>
-      Sell: ₦${p.price.toLocaleString()} | Cost: ₦${p.costPrice.toLocaleString()} | Profit: ₦${profit.toLocaleString()}<br>
-      <img src="${p.image}" width="80"><br>
-      <button onclick="deleteProduct(${p.id})">Delete</button>
-      <hr>
-    `;
-    list.appendChild(li);
-  });
-}
-
-function loadReviews() {
-  const reviewList = document.getElementById("review-list-admin");
-  reviewList.innerHTML = "";
-  reviewData.forEach((r, i) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <strong>${r.name}</strong> (${r.stars}⭐): ${r.text}<br>
-      <button onclick="approveReview(${i})">✅ Approve</button>
-      <button onclick="deleteReview(${i})">❌ Delete</button>
-      <hr>
-    `;
-    reviewList.appendChild(li);
-  });
-}
-
-function approveReview(i) {
-  reviewData[i].approved = true;
-  localStorage.setItem("reviews", JSON.stringify(reviewData));
-  loadReviews();
-}
-
-function deleteReview(i) {
-  reviewData.splice(i, 1);
-  localStorage.setItem("reviews", JSON.stringify(reviewData));
-  loadReviews();
+function submitReview() {
+  const text = document.getElementById("review-input").value;
+  const rating = document.getElementById("review-rating").value;
+  const reviewList = document.getElementById("review-list");
+  const div = document.createElement("div");
+  div.className = "review-card";
+  div.innerHTML = `<p>${"⭐".repeat(rating)} - ${text}</p>`;
+  reviewList.appendChild(div);
+  document.getElementById("review-input").value = "";
 }

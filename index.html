@@ -7,14 +7,13 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f9ff;
+      background-color: #f2f6ff;
       margin: 0;
       padding: 0;
-      color: #333;
     }
     header {
-      background-color: #003366;
-      color: gold;
+      background-color: #002366;
+      color: white;
       padding: 20px;
       text-align: center;
     }
@@ -37,17 +36,11 @@
       object-fit: cover;
       border-radius: 8px;
     }
-    .cart, .admin-panel, .search-bar, .payment-box {
+    .cart, .admin-panel, .order-box, .review-section {
       background-color: #fff;
       margin: 20px;
       padding: 15px;
       border-radius: 10px;
-    }
-    .footer {
-      text-align: center;
-      padding: 20px;
-      background: #003366;
-      color: gold;
     }
     input, select, button, textarea {
       padding: 8px;
@@ -55,40 +48,39 @@
       width: 100%;
       border-radius: 6px;
       border: 1px solid #ccc;
-      box-sizing: border-box;
     }
     button {
-      background-color: #003366;
-      color: gold;
+      background-color: #002366;
+      color: white;
       border: none;
       cursor: pointer;
     }
     button:hover {
-      background-color: #002244;
+      background-color: #003399;
     }
-    .review-section {
+    .search-bar {
       margin: 20px;
-      background: #fff;
-      border-radius: 10px;
-      padding: 15px;
+      padding: 10px;
+      text-align: center;
+    }
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: #333;
     }
     .review {
       padding: 10px;
-      border-bottom: 1px solid #ddd;
-    }
-    .star {
-      color: gold;
+      border-bottom: 1px solid #eee;
     }
     .secret-tap {
       position: fixed;
-      bottom: 10px;
-      left: 10px;
+      bottom: 5px;
+      left: 5px;
       width: 40px;
       height: 40px;
-      background: #003366;
-      border-radius: 50%;
-      z-index: 100;
+      z-index: 999;
       cursor: pointer;
+      opacity: 0;
     }
   </style>
 </head>
@@ -96,15 +88,24 @@
 
 <header>
   <h1>FashGadget</h1>
-  <p>Tech & Fashion Delivered to Your Doorstep</p>
+  <p>Your One-Stop Shop for Fashion and Gadgets</p>
 </header>
 
 <div class="search-bar">
-  <input type="text" id="searchInput" placeholder="Search products..." onkeyup="searchProducts()" />
+  <input type="text" id="searchInput" placeholder="Search products..." onkeyup="searchProducts()">
 </div>
 
 <div class="products" id="product-list"></div>
 
+<div class="secret-tap" onclick="handleSecretTap()"></div>
+
+<div class="admin-panel" id="adminPanel" style="display: none;">
+  <div id="adminContent">
+    <label>Admin Password:</label>
+    <input type="password" id="adminPass" placeholder="Enter password" />
+    <button onclick="loginAdmin()">Login</button>
+  </div>
+</div>
 <div class="cart">
   <h3>Your Cart (<span id="cart-count">0</span> items)</h3>
   <ul id="cart-items"></ul>
@@ -131,20 +132,31 @@
     <option value="Other">Other</option>
   </select>
 
-  <div class="payment-box">
-    <h4>Make Payment</h4>
-    <p>Pay to Opay Account:</p>
-    <p><strong>8108964507</strong> – Sulaimon Olamide Salimo</p>
-    <label>Upload Payment Screenshot or Receipt:</label>
-    <input type="file" id="receipt" accept="image/*" />
-  </div>
+  <label>Upload Receipt:</label>
+  <input type="file" id="receipt" accept="image/*" />
 
-  <button onclick="submitOrder()">Submit Order</button>
+  <button onclick="submitOrder()">Submit Order & Pay</button>
 </div>
+
 <div class="review-section">
   <h3>Customer Reviews</h3>
-  <div class="review">“Fantastic delivery and my laptop works perfectly. Thanks!” – <em>John A.</em> ⭐⭐⭐⭐⭐</div>
-  <div class="review">“Got my couple outfit fast. Good quality too.” – <em>Amina T.</em> ⭐⭐⭐⭐</div>
+  <div id="reviewList">
+    <!-- Reviews will be loaded here -->
+  </div>
+
+  <label>Your Review:</label>
+  <textarea id="reviewText" placeholder="Write your review..."></textarea>
+
+  <label>Rating:</label>
+  <select id="reviewRating">
+    <option value="5">⭐⭐⭐⭐⭐</option>
+    <option value="4">⭐⭐⭐⭐</option>
+    <option value="3">⭐⭐⭐</option>
+    <option value="2">⭐⭐</option>
+    <option value="1">⭐</option>
+  </select>
+
+  <button onclick="submitReview()">Submit Review</button>
 </div>
 
 <div class="footer">
@@ -152,185 +164,261 @@
   Account Number: <strong>8108964507</strong></p>
   <p>&copy; 2025 FashGadget</p>
 </div>
-
-<div class="secret-tap" onclick="handleSecretTap()"></div>
-<div class="admin-panel" id="adminPanel" style="display: none;">
-  <h3>Admin Panel</h3>
-  <div id="adminContent">
-    <label>Password:</label>
-    <input type="password" id="adminPass" placeholder="Enter password" />
-    <button onclick="loginAdmin()">Login</button>
-  </div>
-</div>
-
 <script>
-const products = [
-  {
-    name: "Couple Matching Set",
-    price: 45000,
-    stock: 3,
-    image: "https://i.imgur.com/l6yy92y.jpeg"
-  },
-  {
-    name: "Unisex Smartwatch",
-    price: 18000,
-    stock: 5,
-    image: "https://i.imgur.com/W1kxtCu.jpeg"
-  },
-  {
-    name: "Men's Sneakers",
-    price: 25000,
-    stock: 4,
-    image: "https://i.imgur.com/fyScv3I.jpeg"
-  },
-  {
-    name: "Women Handbag",
-    price: 15000,
-    stock: 6,
-    image: "https://i.imgur.com/BEcA1TT.jpeg"
-  },
-  {
-    name: "Mini Laptop",
-    price: 87000,
-    stock: 2,
-    image: "https://i.imgur.com/TvM3jPl.jpeg"
-  }
-];
-
-const cart = [];
-let adminClicks = 0;
-  function renderProducts() {
-  const list = document.getElementById("product-list");
-  list.innerHTML = "";
-  products.forEach((product, index) => {
-    const p = document.createElement("div");
-    p.className = "product";
-    p.innerHTML = `
-      <img src="${product.image}" alt="${product.name}" />
-      <h4>${product.name}</h4>
-      <p>₦${product.price.toLocaleString()}</p>
-      <p>In stock: ${product.stock}</p>
-      <input type="number" id="qty-${index}" min="1" max="${product.stock}" value="1" />
-      <button onclick="addToCart(${index})">Add to Cart</button>
-    `;
-    list.appendChild(p);
-  });
-}
-
-function addToCart(index) {
-  const qty = parseInt(document.getElementById(`qty-${index}`).value);
-  if (qty > products[index].stock || qty < 1) {
-    alert("Invalid quantity");
-    return;
-  }
-  cart.push({ ...products[index], quantity: qty });
-  products[index].stock -= qty;
-  renderProducts();
-  updateCart();
-}
-
-function updateCart() {
-  const cartList = document.getElementById("cart-items");
-  const cartCount = document.getElementById("cart-count");
-  const total = document.getElementById("total-amount");
-  cartList.innerHTML = "";
-  let count = 0;
-  let sum = 0;
-  cart.forEach((item, i) => {
-    const li = document.createElement("li");
-    li.textContent = `${item.name} (x${item.quantity}) - ₦${(item.price * item.quantity).toLocaleString()}`;
-    const removeBtn = document.createElement("button");
-    removeBtn.textContent = "❌";
-    removeBtn.onclick = () => removeFromCart(i);
-    li.appendChild(removeBtn);
-    cartList.appendChild(li);
-    count += item.quantity;
-    sum += item.price * item.quantity;
-  });
-  cartCount.textContent = count;
-  total.textContent = sum.toLocaleString();
-}
-
-function removeFromCart(index) {
-  const item = cart[index];
-  const product = products.find(p => p.name === item.name);
-  if (product) product.stock += item.quantity;
-  cart.splice(index, 1);
-  renderProducts();
-  updateCart();
-}
-  function submitOrder() {
-  const name = document.getElementById("fullname").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const address = document.getElementById("address").value.trim();
-  const state = document.getElementById("state").value;
-  const receipt = document.getElementById("receipt").files[0];
-
-  if (!name || !phone || !address || !state || cart.length === 0) {
-    alert("Please fill all fields and add items to cart.");
-    return;
-  }
-
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const productSummary = cart.map(item => `${item.name} (x${item.quantity})`).join(", ");
-  const message = `Hello, FashGadget. I just made my payment and have uploaded the receipt. Kindly confirm and proceed with my order. Thank you!\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n🏡 Address: ${address}, ${state}\n🛒 Order: ${productSummary}\n💳 Amount Paid: ₦${total.toLocaleString()}`;
-
-  const encoded = encodeURIComponent(message);
-  const whatsappUrl = `https://wa.me/2349132888197?text=${encoded}`;
-  window.location.href = whatsappUrl;
-}
-
-function handleSecretTap() {
-  adminClicks++;
-  if (adminClicks >= 6) {
-    document.getElementById("adminPanel").style.display = "block";
-    adminClicks = 0;
-  }
-}
-
-function loginAdmin() {
-  const pass = document.getElementById("adminPass").value;
-  if (pass === "Busayomi1") {
-    localStorage.setItem("adminLoggedIn", "true");
-    document.getElementById("adminContent").innerHTML = "<p>Welcome Admin</p><button onclick='logoutAdmin()'>Logout</button>";
-  } else {
-    alert("Wrong password!");
-  }
-}
-
-function logoutAdmin() {
-  localStorage.removeItem("adminLoggedIn");
-  document.getElementById("adminPanel").style.display = "none";
-}
-
-function searchProducts() {
-  const query = document.getElementById("searchInput").value.toLowerCase();
-  const list = document.getElementById("product-list");
-  list.innerHTML = "";
-  products.forEach((product, index) => {
-    if (product.name.toLowerCase().includes(query)) {
-      const p = document.createElement("div");
-      p.className = "product";
-      p.innerHTML = `
-        <img src="${product.image}" alt="${product.name}" />
-        <h4>${product.name}</h4>
-        <p>₦${product.price.toLocaleString()}</p>
-        <p>In stock: ${product.stock}</p>
-        <input type="number" id="qty-${index}" min="1" max="${product.stock}" value="1" />
-        <button onclick="addToCart(${index})">Add to Cart</button>
-      `;
-      list.appendChild(p);
+  const products = [
+    {
+      name: "Couple Smartwatch Set",
+      price: 32000,
+      stock: 3,
+      image: "https://i.imgur.com/wRRGF0X.jpeg"
+    },
+    {
+      name: "Wireless Bluetooth Earbuds",
+      price: 18000,
+      stock: 4,
+      image: "https://i.imgur.com/lw5l2Dz.jpeg"
+    },
+    {
+      name: "Men's Jogger Set",
+      price: 25000,
+      stock: 2,
+      image: "https://i.imgur.com/0DAmDoJ.jpeg"
     }
-  });
-}
+  ];
 
-window.onload = () => {
-  renderProducts();
-  if (localStorage.getItem("adminLoggedIn") === "true") {
-    document.getElementById("adminPanel").style.display = "block";
-    document.getElementById("adminContent").innerHTML = "<p>Welcome Admin</p><button onclick='logoutAdmin()'>Logout</button>";
+  const cart = [];
+  const reviews = [];
+  const orders = [];
+  let adminClicks = 0;
+  let isAdmin = false;
+
+  function renderProducts(list = products) {
+    const container = document.getElementById("product-list");
+    container.innerHTML = "";
+    list.forEach((p, i) => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <img src="${p.image}" />
+        <h4>${p.name}</h4>
+        <p>₦${p.price.toLocaleString()}</p>
+        <p>In stock: ${p.stock}</p>
+        <input type="number" min="1" max="${p.stock}" value="1" id="qty-${i}" />
+        <button onclick="addToCart(${i})">Add to Cart</button>
+      `;
+      container.appendChild(div);
+    });
   }
-};
+
+  function addToCart(index) {
+    const qty = parseInt(document.getElementById(`qty-${index}`).value);
+    if (qty > products[index].stock) return alert("Not enough stock.");
+    cart.push({ ...products[index], quantity: qty });
+    products[index].stock -= qty;
+    renderProducts();
+    updateCart();
+  }
+
+  function updateCart() {
+    const items = document.getElementById("cart-items");
+    const count = document.getElementById("cart-count");
+    const total = document.getElementById("total-amount");
+    items.innerHTML = "";
+    let t = 0;
+    cart.forEach((item, i) => {
+      const li = document.createElement("li");
+      li.innerHTML = `${item.name} (x${item.quantity}) - ₦${item.price * item.quantity} <button onclick="removeFromCart(${i})">❌</button>`;
+      items.appendChild(li);
+      t += item.price * item.quantity;
+    });
+    count.textContent = cart.length;
+    total.textContent = t.toLocaleString();
+  }
+
+  function removeFromCart(index) {
+    const item = cart[index];
+    products.find(p => p.name === item.name).stock += item.quantity;
+    cart.splice(index, 1);
+    renderProducts();
+    updateCart();
+  }
+
+  function searchProducts() {
+    const val = document.getElementById("searchInput").value.toLowerCase();
+    const filtered = products.filter(p => p.name.toLowerCase().includes(val));
+    renderProducts(filtered);
+  }
+
+  function submitOrder() {
+    const name = document.getElementById("fullname").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const address = document.getElementById("address").value.trim();
+    const state = document.getElementById("state").value;
+    const receipt = document.getElementById("receipt").files[0];
+
+    if (!name || !phone || !address || !state || cart.length === 0) {
+      alert("Please complete the order form and cart.");
+      return;
+    }
+
+    let total = 0;
+    const items = cart.map(p => `${p.name} (x${p.quantity})`).join(", ");
+    cart.forEach(p => total += p.price * p.quantity);
+
+    const order = {
+      name, phone, address, state, total, items,
+      status: "pending"
+    };
+    orders.push(order);
+
+    const msg = `Hello, FashGadget. I just made my payment and have uploaded the receipt. Kindly confirm and proceed with my order.\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}, ${state}\nOrder: ${items}\nTotal Paid: ₦${total.toLocaleString()}`;
+    const encoded = encodeURIComponent(msg);
+    window.location.href = `https://wa.me/2349132888197?text=${encoded}`;
+
+    cart.length = 0;
+    updateCart();
+  }
+
+  function handleSecretTap() {
+    adminClicks++;
+    if (adminClicks >= 6) {
+      document.getElementById("adminPanel").style.display = "block";
+      adminClicks = 0;
+    }
+  }
+
+  function loginAdmin() {
+    const pass = document.getElementById("adminPass").value;
+    if (pass === "Busayomi1") {
+      isAdmin = true;
+      showAdminMenu();
+    } else {
+      alert("Wrong password");
+    }
+  }
+
+  function showAdminMenu() {
+    const html = `
+      <h3>Welcome Admin</h3>
+      <button onclick="showOrders()">Manage Orders</button>
+      <button onclick="showRestock()">Restock</button>
+      <button onclick="showReviews()">Moderate Reviews</button>
+      <button onclick="showAddProduct()">Add Product</button>
+      <button onclick="logoutAdmin()">Logout</button>
+    `;
+    document.getElementById("adminContent").innerHTML = html;
+  }
+
+  function logoutAdmin() {
+    isAdmin = false;
+    document.getElementById("adminPanel").style.display = "none";
+  }
+
+  function showOrders() {
+    let html = "<h4>Orders</h4>";
+    orders.forEach((o, i) => {
+      html += `
+        <div style="border:1px solid #ccc; padding:10px; margin:5px;">
+          <p>${o.name} - ${o.phone} - ₦${o.total}</p>
+          <p>${o.items}</p>
+          <p>Status: ${o.status}</p>
+          <button onclick="confirmOrder(${i})">Confirm</button>
+          <button onclick="rejectOrder(${i})">Reject</button>
+        </div>`;
+    });
+    document.getElementById("adminContent").innerHTML = html + `<button onclick="showAdminMenu()">← Back</button>`;
+  }
+
+  function confirmOrder(index) {
+    orders[index].status = "confirmed";
+    showOrders();
+  }
+
+  function rejectOrder(index) {
+    orders[index].status = "rejected";
+    showOrders();
+  }
+
+  function showRestock() {
+    let html = "<h4>Restock Products</h4>";
+    products.forEach((p, i) => {
+      html += `
+        <div>
+          <p>${p.name} - In stock: ${p.stock}</p>
+          <input type="number" id="stock-${i}" placeholder="Add stock" />
+        </div>`;
+    });
+    html += `<button onclick="saveRestock()">Save</button><button onclick="showAdminMenu()">← Back</button>`;
+    document.getElementById("adminContent").innerHTML = html;
+  }
+
+  function saveRestock() {
+    products.forEach((p, i) => {
+      const added = parseInt(document.getElementById(`stock-${i}`).value);
+      if (!isNaN(added)) p.stock += added;
+    });
+    renderProducts();
+    showAdminMenu();
+  }
+
+  function submitReview() {
+    const text = document.getElementById("reviewText").value;
+    const stars = document.getElementById("reviewRating").value;
+    if (!text) return alert("Write your review");
+    reviews.push({ text, stars });
+    renderReviews();
+    document.getElementById("reviewText").value = "";
+  }
+
+  function renderReviews() {
+    const list = document.getElementById("reviewList");
+    list.innerHTML = "";
+    reviews.forEach((r, i) => {
+      const div = document.createElement("div");
+      div.className = "review";
+      div.innerHTML = `<p>${"⭐".repeat(r.stars)}</p><p>${r.text}</p>` +
+        (isAdmin ? `<button onclick="deleteReview(${i})">Delete</button>` : "");
+      list.appendChild(div);
+    });
+  }
+
+  function deleteReview(index) {
+    reviews.splice(index, 1);
+    renderReviews();
+  }
+
+  function showReviews() {
+    renderReviews();
+    document.getElementById("adminContent").innerHTML += `<button onclick="showAdminMenu()">← Back</button>`;
+  }
+
+  function showAddProduct() {
+    const html = `
+      <h4>Add New Product</h4>
+      <input type="text" id="newName" placeholder="Product name" />
+      <input type="number" id="newPrice" placeholder="Price" />
+      <input type="number" id="newStock" placeholder="Stock" />
+      <input type="text" id="newImg" placeholder="Image URL" />
+      <button onclick="saveProduct()">Save</button>
+      <button onclick="showAdminMenu()">← Back</button>
+    `;
+    document.getElementById("adminContent").innerHTML = html;
+  }
+
+  function saveProduct() {
+    const name = document.getElementById("newName").value;
+    const price = parseInt(document.getElementById("newPrice").value);
+    const stock = parseInt(document.getElementById("newStock").value);
+    const image = document.getElementById("newImg").value;
+    if (!name || !price || !stock || !image) return alert("Complete all fields");
+    products.push({ name, price, stock, image });
+    renderProducts();
+    showAdminMenu();
+  }
+
+  window.onload = () => {
+    renderProducts();
+  };
 </script>
 
 </body>

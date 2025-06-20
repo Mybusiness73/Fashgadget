@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f4fc;
+      background-color: #f5f9ff;
       margin: 0;
       padding: 0;
       color: #222;
@@ -25,311 +25,365 @@
       padding: 20px;
     }
     .product {
-      background: #fff;
+      background-color: #fff;
       border-radius: 10px;
       padding: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .product img {
       width: 100%;
-      height: 180px;
+      height: 200px;
       object-fit: cover;
       border-radius: 8px;
-    }
-    button, input, select {
-      padding: 8px;
-      margin: 5px 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      width: 100%;
-    }
-    button {
-      background-color: #003366;
-      color: white;
       cursor: pointer;
-      border: none;
     }
-    button:hover {
-      background-color: #002244;
-    }
-    .cart {
-      background: white;
+    .cart, .admin-panel, .order-box, .review-section {
+      background-color: #fff;
       margin: 20px;
       padding: 15px;
       border-radius: 10px;
-    }
-    #cart-items li {
-      margin-bottom: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .footer {
       text-align: center;
       padding: 20px;
-      color: #333;
+      color: #555;
     }
-    .search-bar {
-      padding: 0 20px;
-    }
-    .search-bar input {
+    input, select, button, textarea {
+      padding: 8px;
+      margin: 5px 0;
       width: 100%;
+      border-radius: 6px;
       border: 1px solid #ccc;
-    }
-    .admin-panel {
-      display: none;
-      background: white;
-      padding: 15px;
-      margin: 20px;
-      border-radius: 10px;
-    }
-    .secret-tap {
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      width: 40px;
-      height: 40px;
-      z-index: 100;
-    }
-  </style>
-</head>
-<body>
-
-<header>
-  <h1>FashGadget</h1>
-  <p>Tech & Fashion Delivered in Style</p>
-</header>
-
-<div class="search-bar">
-  <input type="text" id="searchInput" placeholder="Search for products..." onkeyup="searchProducts()"/>
-</div>
-
-<div class="products" id="product-list"></div>
-
-<div class="cart">
-  <h3>Your Cart (<span id="cart-count">0</span> items)</h3>
-  <ul id="cart-items"></ul>
-  <p><strong>Total:</strong> ₦<span id="total-amount">0</span></p>
-
-  <label>Full Name:</label>
-  <input type="text" id="fullname" placeholder="Your name" />
-
-  <label>Phone Number:</label>
-  <input type="text" id="phone" placeholder="Your phone number" />
-
-  <label>Delivery Address:</label>
-  <input type="text" id="address" placeholder="Full delivery address" />
-
-  <label>State:</label>
-  <select id="state">
-    <option value="">-- Select State --</option>
-    <option value="Lagos">Lagos</option>
-    <option value="Ibadan">Ibadan</option>
-    <option value="Osun">Osun</option>
-    <option value="Akure">Akure</option>
-    <option value="Ekiti">Ekiti</option>
-    <option value="Oyo">Oyo</option>
-    <option value="Other">Other</option>
-  </select>
-
-  <label>Upload Payment Receipt:</label>
-  <input type="file" id="receipt" accept="image/*" />
-
-  <button onclick="submitOrder()">Submit Order</button>
-</div>
-
-<div class="footer">
-  <p><strong>Opay Account:</strong> Sulaimon Olamide Salimo<br>
-  Account Number: <strong>8108964507</strong></p>
-  <p>&copy; 2025 FashGadget</p>
-</div>
-
-<div class="admin-panel" id="adminPanel">
-  <div id="adminContent">
-    <label>Password:</label>
-    <input type="password" id="adminPass" placeholder="Enter password" />
-    <button onclick="loginAdmin()">Login</button>
-  </div>
-</div>
-
-<div class="secret-tap" onclick="handleSecretTap()"></div>
-
-<script src="products.js"></script>
-<script src="index.js"></script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Product Details - FashGadget</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f4fc;
-      margin: 0;
-      padding: 0;
-      color: #222;
-    }
-    header {
-      background-color: #003366;
-      color: gold;
-      padding: 15px;
-      text-align: center;
-    }
-    .product-detail {
-      max-width: 800px;
-      margin: 20px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-    }
-    .product-detail h2 {
-      margin-top: 0;
-    }
-    .product-images {
-      display: flex;
-      overflow-x: auto;
-      gap: 10px;
-    }
-    .product-images img {
-      height: 250px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-    .sizes {
-      margin: 10px 0;
-    }
-    .sizes label {
-      margin-right: 10px;
+      font-family: inherit;
     }
     button {
-      background: #003366;
+      background-color: #003366;
       color: white;
-      padding: 10px 15px;
       border: none;
-      border-radius: 6px;
       cursor: pointer;
     }
     button:hover {
-      background: #002244;
+      background-color: #002244;
+    }
+    .hidden-tap {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 50px;
+      opacity: 0;
+      z-index: 9999;
+    }
+    .search-bar {
+      padding: 10px;
+      text-align: center;
+    }
+    .search-bar input {
+      width: 60%;
+    }
+    #productModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    #modalContent {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    #modalContent img {
+      width: 100%;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+    .review {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
     }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>FashGadget</h1>
-</header>
+  <header>
+    <h1>FashGadget</h1>
+    <p>Tech & Fashion for Everyone</p>
+  </header>
 
-<div class="product-detail" id="productDetail"></div>
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search products..." onkeyup="searchProducts()" />
+  </div>
 
-<script src="products.js"></script>
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const productId = parseInt(params.get("id"));
-  const product = products[productId];
+  <div class="products" id="product-list"></div>
 
-  function loadProduct() {
-    const container = document.getElementById("productDetail");
-    if (!product) {
-      container.innerHTML = "<p>Product not found.</p>";
-      return;
+  <div class="cart">
+    <h3>Your Cart (<span id="cart-count">0</span> items)</h3>
+    <ul id="cart-items"></ul>
+    <p><strong>Total:</strong> ₦<span id="total-amount">0</span></p>
+
+    <label>Full Name:</label>
+    <input type="text" id="fullname" placeholder="Your name" required>
+
+    <label>Phone Number:</label>
+    <input type="text" id="phone" placeholder="Your phone number" required>
+
+    <label>Delivery Address:</label>
+    <input type="text" id="address" placeholder="Street, house no, etc" required>
+
+    <label>State:</label>
+    <select id="state">
+      <option value="">-- Select State --</option>
+      <option value="Lagos">Lagos</option>
+      <option value="Ibadan">Ibadan</option>
+      <option value="Osun">Osun</option>
+      <option value="Akure">Akure</option>
+      <option value="Ekiti">Ekiti</option>
+      <option value="Oyo">Oyo</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <button onclick="submitOrder()">Submit Order</button>
+  </div>
+    <div class="review-section">
+    <h3>Customer Reviews</h3>
+    <div id="reviews-list"></div>
+  </div>
+
+  <div class="footer">
+    <p><strong>Opay Account:</strong> Sulaimon Olamide Salimo<br>
+    Account Number: <strong>8108964507</strong></p>
+    <p>&copy; 2025 FashGadget</p>
+  </div>
+
+  <div class="hidden-tap" onclick="handleAdminTap()"></div>
+
+  <div class="admin-panel" id="adminPanel" style="display: none;">
+    <h3>Admin Panel</h3>
+    <div id="adminLoginBox">
+      <label>Password:</label>
+      <input type="password" id="adminPass" placeholder="Enter password" />
+      <button onclick="loginAdmin()">Login</button>
+    </div>
+    <div id="adminArea" style="display:none;">
+      <h4>Add / Edit Product</h4>
+      <input type="text" id="prodName" placeholder="Product Name" />
+      <input type="number" id="prodPrice" placeholder="Price" />
+      <input type="number" id="prodStock" placeholder="Stock" />
+      <input type="text" id="prodSizes" placeholder="Sizes (comma separated)" />
+      <textarea id="prodDesc" placeholder="Product Description"></textarea>
+      <input type="text" id="prodImgs" placeholder="Image URLs (comma separated)" />
+      <button onclick="addProduct()">Save Product</button>
+
+      <h4>Products</h4>
+      <ul id="adminProductList"></ul>
+    </div>
+  </div>
+
+  <div id="productModal">
+    <div id="modalContent"></div>
+  </div>
+
+  <input type="file" id="reviewImageInput" accept="image/*" style="display:none;" onchange="previewReviewImage(event)" />
+  <script>
+  const products = [
+    {
+      id: 0,
+      name: "Bluetooth Smartwatch",
+      price: 28000,
+      stock: 5,
+      images: [
+        "https://i.imgur.com/8uMiO7D.jpeg",
+        "https://i.imgur.com/lWbssiO.jpeg",
+        "https://i.imgur.com/hRoMhrK.jpeg"
+      ],
+      description: "Track your steps, heart rate, and messages in style.",
+      sizes: ["S", "M", "L", "XL"],
+      reviews: []
+    },
+    {
+      id: 1,
+      name: "Couple Matching Techwear",
+      price: 45000,
+      stock: 3,
+      images: [
+        "https://i.imgur.com/l6yy92y.jpeg",
+        "https://i.imgur.com/VZa8Mgn.jpeg",
+        "https://i.imgur.com/imB9Odu.jpeg"
+      ],
+      description: "Trendy up & down outfit for couples. Great fit and quality.",
+      sizes: ["S", "M", "L", "XL"],
+      reviews: []
     }
+  ];
 
-    const images = product.images.map(img => `<img src="${img}" alt="Product Image" />`).join("");
+  let cart = [];
+  let adminClicks = 0;
 
-    const sizes = ["S", "M", "L", "XL"].map(size => `
-      <label><input type="radio" name="size" value="${size}" /> ${size}</label>
-    `).join("");
-
-    container.innerHTML = `
-      <div class="product-images">${images}</div>
-      <h2>${product.name}</h2>
-      <p><strong>Price:</strong> ₦${product.price.toLocaleString()}</p>
-      <p>${product.description || "No description available."}</p>
-      <div class="sizes"><strong>Sizes:</strong><br>${sizes}</div>
-      <button onclick="addToCart(${productId})">Add to Cart</button>
-    `;
+  function renderProducts(list = products) {
+    const el = document.getElementById("product-list");
+    el.innerHTML = "";
+    list.forEach((p, index) => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <img src="${p.images[0]}" onclick="showProductModal(${index})" />
+        <h4>${p.name}</h4>
+        <p>₦${p.price.toLocaleString()}</p>
+        <p>Stock: ${p.stock}</p>
+        <input type="number" id="qty-${index}" min="1" max="${p.stock}" value="1" />
+        <button onclick="addToCart(${index})">Add to Cart</button>
+      `;
+      el.appendChild(div);
+    });
   }
 
   function addToCart(index) {
-    const selectedSize = document.querySelector('input[name="size"]:checked');
-    if (!selectedSize) {
-      alert("Please select a size.");
+    const qty = parseInt(document.getElementById(`qty-${index}`).value);
+    if (qty > products[index].stock) {
+      alert("Not enough stock");
+      return;
+    }
+    cart.push({ ...products[index], quantity: qty });
+    products[index].stock -= qty;
+    renderProducts();
+    updateCart();
+  }
+
+  function updateCart() {
+    const list = document.getElementById("cart-items");
+    list.innerHTML = "";
+    let total = 0, count = 0;
+    cart.forEach((item, i) => {
+      const li = document.createElement("li");
+      li.textContent = `${item.name} (x${item.quantity}) - ₦${(item.price * item.quantity).toLocaleString()}`;
+      const removeBtn = document.createElement("button");
+      removeBtn.textContent = "❌";
+      removeBtn.onclick = () => removeFromCart(i);
+      li.appendChild(removeBtn);
+      list.appendChild(li);
+      count += item.quantity;
+      total += item.price * item.quantity;
+    });
+    document.getElementById("cart-count").textContent = count;
+    document.getElementById("total-amount").textContent = total.toLocaleString();
+  }
+
+  function removeFromCart(index) {
+    const item = cart[index];
+    products.find(p => p.id === item.id).stock += item.quantity;
+    cart.splice(index, 1);
+    renderProducts();
+    updateCart();
+  }
+
+  function submitOrder() {
+    const name = document.getElementById("fullname").value;
+    const phone = document.getElementById("phone").value;
+    const address = document.getElementById("address").value;
+    const state = document.getElementById("state").value;
+    if (!name || !phone || !address || !state || cart.length === 0) {
+      alert("Please complete all fields and cart.");
       return;
     }
 
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push({ ...products[index], quantity: 1, size: selectedSize.value });
-    localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Added to cart!");
+    const order = cart.map(i => `${i.name} (x${i.quantity})`).join(", ");
+    const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+    const msg = `Hello, FashGadget. I just made my payment and have uploaded the receipt. Kindly confirm and proceed with my order. Thank you!\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n🏡 Address: ${address}, ${state}\n🛍️ Order: ${order}\n💳 Total: ₦${total.toLocaleString()}`;
+    window.location.href = `https://wa.me/2349132888197?text=${encodeURIComponent(msg)}`;
   }
 
-  window.onload = loadProduct;
+  function handleAdminTap() {
+    adminClicks++;
+    if (adminClicks >= 6) {
+      document.getElementById("adminPanel").style.display = "block";
+      adminClicks = 0;
+    }
+  }
+
+  function loginAdmin() {
+    const pass = document.getElementById("adminPass").value;
+    if (pass === "Busayomi1") {
+      document.getElementById("adminLoginBox").style.display = "none";
+      document.getElementById("adminArea").style.display = "block";
+      renderAdminProducts();
+    } else {
+      alert("Wrong password.");
+    }
+  }
+
+  function renderAdminProducts() {
+    const list = document.getElementById("adminProductList");
+    list.innerHTML = "";
+    products.forEach((p, i) => {
+      const li = document.createElement("li");
+      li.textContent = `${p.name} - ₦${p.price} (Stock: ${p.stock})`;
+      const del = document.createElement("button");
+      del.textContent = "❌";
+      del.onclick = () => {
+        products.splice(i, 1);
+        renderProducts();
+        renderAdminProducts();
+      };
+      li.appendChild(del);
+      list.appendChild(li);
+    });
+  }
+
+  function addProduct() {
+    const name = document.getElementById("prodName").value.trim();
+    const price = parseInt(document.getElementById("prodPrice").value);
+    const stock = parseInt(document.getElementById("prodStock").value);
+    const sizes = document.getElementById("prodSizes").value.split(",").map(s => s.trim());
+    const desc = document.getElementById("prodDesc").value.trim();
+    const images = document.getElementById("prodImgs").value.split(",").map(i => i.trim());
+
+    if (!name || !price || !images.length) {
+      alert("Please fill all product fields");
+      return;
+    }
+
+    products.push({ id: Date.now(), name, price, stock, sizes, description: desc, images, reviews: [] });
+    renderProducts();
+    renderAdminProducts();
+    alert("Product added!");
+  }
+
+  function showProductModal(index) {
+    const p = products[index];
+    const modal = document.getElementById("productModal");
+    const html = `
+      <h3>${p.name}</h3>
+      ${p.images.map(i => `<img src="${i}" />`).join("")}
+      <p><strong>Description:</strong> ${p.description}</p>
+      <p><strong>Price:</strong> ₦${p.price.toLocaleString()}</p>
+      <p><strong>Available Sizes:</strong> ${p.sizes.join(", ")}</p>
+      <button onclick="addToCart(${index})">Add to Cart</button>
+    `;
+    document.getElementById("modalContent").innerHTML = html;
+    modal.style.display = "flex";
+    modal.onclick = () => modal.style.display = "none";
+  }
+
+  function searchProducts() {
+    const val = document.getElementById("searchInput").value.toLowerCase();
+    const results = products.filter(p => p.name.toLowerCase().includes(val));
+    renderProducts(results);
+  }
+
+  window.onload = () => renderProducts();
 </script>
 
 </body>
 </html>
-const products = [
-  {
-    name: "Couples Tech Outfit",
-    price: 45000,
-    stock: 3,
-    images: [
-      "https://i.imgur.com/l6yy92y.jpeg",
-      "https://i.imgur.com/VZa8Mgn.jpeg",
-      "https://i.imgur.com/imB9Odu.jpeg"
-    ],
-    description: "A stylish and comfortable tech-inspired couple outfit for modern trends.",
-    sizes: ["S", "M", "L", "XL"]
-  },
-  {
-    name: "Wireless Smartwatch",
-    price: 28000,
-    stock: 5,
-    images: [
-      "https://i.imgur.com/8uMiO7D.jpeg",
-      "https://i.imgur.com/hRoMhrK.jpeg",
-      "https://i.imgur.com/lWbssiO.jpeg"
-    ],
-    description: "Track your fitness, messages, and notifications in one elegant gadget.",
-    sizes: ["S", "M", "L", "XL"]
-  },
-  {
-    name: "Men's Bluetooth Glasses",
-    price: 18000,
-    stock: 4,
-    images: [
-      "https://i.imgur.com/hRoMhrK.jpeg",
-      "https://i.imgur.com/imB9Odu.jpeg",
-      "https://i.imgur.com/VZa8Mgn.jpeg"
-    ],
-    description: "Enjoy music and calls with built-in speakers in stylish sunglasses.",
-    sizes: ["S", "M", "L", "XL"]
-  },
-  {
-    name: "Premium Leather Laptop Bag",
-    price: 32000,
-    stock: 2,
-    images: [
-      "https://i.imgur.com/lWbssiO.jpeg",
-      "https://i.imgur.com/8uMiO7D.jpeg",
-      "https://i.imgur.com/l6yy92y.jpeg"
-    ],
-    description: "Elegant and durable laptop bag with enough space and compartments.",
-    sizes: ["S", "M", "L", "XL"]
-  },
-  {
-    name: "Couple Matching Sneakers",
-    price: 40000,
-    stock: 6,
-    images: [
-      "https://i.imgur.com/imB9Odu.jpeg",
-      "https://i.imgur.com/VZa8Mgn.jpeg",
-      "https://i.imgur.com/l6yy92y.jpeg"
-    ],
-    description: "Step in style with comfortable, colorful couple sneakers for everyday wear.",
-    sizes: ["S", "M", "L", "XL"]
-  }
-];
